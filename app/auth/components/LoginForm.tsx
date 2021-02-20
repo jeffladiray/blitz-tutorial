@@ -1,4 +1,7 @@
-import { AuthenticationError, Link, useMutation } from "blitz"
+import { AuthenticationError, useMutation } from "blitz"
+import { makeStyles } from "@material-ui/core/styles"
+import Link from "@material-ui/core/Link"
+import Typography from "@material-ui/core/Typography"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import login from "app/auth/mutations/login"
@@ -8,12 +11,22 @@ type LoginFormProps = {
   onSuccess?: () => void
 }
 
+const useStyles = makeStyles({
+  loginForm: {
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    maxWidth: "330px",
+  },
+})
+
 export const LoginForm = (props: LoginFormProps) => {
   const [loginMutation] = useMutation(login)
-
+  const classes = useStyles()
   return (
-    <div>
-      <h1>Login</h1>
+    <div className={classes.loginForm}>
+      <Typography variant="h4">Login</Typography>
 
       <Form
         submitText="Login"

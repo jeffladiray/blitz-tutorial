@@ -1,5 +1,6 @@
 import { forwardRef, PropsWithoutRef } from "react"
 import { useField } from "react-final-form"
+import { TextField } from "mui-rff"
 
 export interface LabeledTextFieldProps extends PropsWithoutRef<JSX.IntrinsicElements["input"]> {
   /** Field name. */
@@ -21,13 +22,15 @@ export const LabeledTextField = forwardRef<HTMLInputElement, LabeledTextFieldPro
     })
 
     const normalizedError = Array.isArray(error) ? error.join(", ") : error || submitError
-
     return (
       <div {...outerProps}>
-        <label>
-          {label}
-          <input {...input} disabled={submitting} {...props} ref={ref} />
-        </label>
+        <TextField
+          label={label}
+          name={input.name}
+          disabled={submitting}
+          type={props.type}
+          ref={ref}
+        />
 
         {touched && normalizedError && (
           <div role="alert" style={{ color: "red" }}>
