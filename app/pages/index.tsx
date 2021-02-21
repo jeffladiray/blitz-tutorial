@@ -1,14 +1,22 @@
 import { Suspense } from "react"
 import { Link, BlitzPage } from "blitz"
+import { makeStyles } from "@material-ui/core/styles"
+import Button from "@material-ui/core/Button"
 import Layout from "app/core/layouts/Layout"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 
-/*
- * This file is just for a pleasant getting started page for your new app.
- * You can delete everything in here and start from scratch if you like.
- */
+const useStyles = makeStyles({
+  index: {
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    maxWidth: "330px",
+  },
+})
 
 const UserInfo = () => {
+  const classes = useStyles()
   const currentUser = useCurrentUser()
 
   if (currentUser) {
@@ -23,18 +31,14 @@ const UserInfo = () => {
     )
   } else {
     return (
-      <>
+      <div className={classes.index}>
         <Link href="/signup">
-          <a className="button small">
-            <strong>Sign Up</strong>
-          </a>
+          <Button>Sign Up</Button>
         </Link>
         <Link href="/login">
-          <a className="button small">
-            <strong>Login</strong>
-          </a>
+          <Button>Login</Button>
         </Link>
-      </>
+      </div>
     )
   }
 }

@@ -1,4 +1,6 @@
 import { useMutation } from "blitz"
+import { makeStyles } from "@material-ui/core/styles"
+import Typography from "@material-ui/core/Typography"
 import { LabeledTextField } from "app/core/components/LabeledTextField"
 import { Form, FORM_ERROR } from "app/core/components/Form"
 import signup from "app/auth/mutations/signup"
@@ -8,12 +10,23 @@ type SignupFormProps = {
   onSuccess?: () => void
 }
 
+const useStyles = makeStyles({
+  signUpForm: {
+    margin: "0 auto",
+    display: "flex",
+    flexDirection: "column",
+    textAlign: "center",
+    maxWidth: "330px",
+  },
+})
+
 export const SignupForm = (props: SignupFormProps) => {
+  const classes = useStyles()
   const [signupMutation] = useMutation(signup)
 
   return (
-    <div>
-      <h1>Create an Account</h1>
+    <div className={classes.signUpForm}>
+      <Typography variant="h4">Sign up</Typography>
 
       <Form
         submitText="Create Account"

@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react"
-import { Head, useMutation } from "blitz"
+import React, { ReactNode, Suspense } from "react"
+import { Head, Link, useMutation } from "blitz"
 import clsx from "clsx"
 import { makeStyles } from "@material-ui/core/styles"
 import AppBar from "@material-ui/core/AppBar"
@@ -11,6 +11,7 @@ import Divider from "@material-ui/core/Divider"
 import MenuIcon from "@material-ui/icons/Menu"
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft"
 import ExitToAppIcon from "@material-ui/icons/ExitToApp"
+import QuestionAnswer from "@material-ui/icons/QuestionAnswer"
 import { useCurrentUser } from "app/core/hooks/useCurrentUser"
 import logout from "app/auth/mutations/logout"
 
@@ -61,6 +62,9 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flexGrow: 1,
+  },
+  contentLoggedIn: {
+    flexGrow: 1,
     padding: theme.spacing(3),
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
@@ -68,7 +72,7 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: -drawerWidth,
   },
-  contentShift: {
+  contentLoggedInShift: {
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.easeOut,
       duration: theme.transitions.duration.enteringScreen,
@@ -77,12 +81,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Layout = ({ title, children }: LayoutProps) => {
+const UserLayout = ({ title, children }: LayoutProps) => {
   const classes = useStyles()
   const [open, setOpen] = React.useState(false)
 
-  const currentUser = useCurrentUser()
   const [logoutMutation] = useMutation(logout)
+  const currentUser = useCurrentUser()
 
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -99,7 +103,7 @@ const Layout = ({ title, children }: LayoutProps) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className={classes.root}>
-        {currentUser && (
+        {currentUser ? (
           <>
             <AppBar
               position="fixed"
@@ -144,19 +148,35 @@ const Layout = ({ title, children }: LayoutProps) => {
               >
                 <ExitToAppIcon />
               </IconButton>
+
+              <Link href="/questions">
+                <IconButton>
+                  <QuestionAnswer />
+                </IconButton>
+              </Link>
             </Drawer>
+            <main
+              className={clsx(classes.contentLoggedIn, {
+                [classes.contentLoggedInShift]: open,
+              })}
+            >
+              {currentUser && <div className={classes.drawerHeader} />}
+              {children}
+            </main>
           </>
+        ) : (
+          <main className={classes.content}>{children}</main>
         )}
-        <main
-          className={clsx(classes.content, {
-            [classes.contentShift]: open,
-          })}
-        >
-          {currentUser && <div className={classes.drawerHeader} />}
-          {children}
-        </main>
       </div>
     </>
+  )
+}
+
+const Layout = ({ title, children }: LayoutProps) => {
+  return (
+    <Suspense fallback="Loading ...">
+      <UserLayout title={title}>{children}</UserLayout>
+    </Suspense>
   )
 }
 

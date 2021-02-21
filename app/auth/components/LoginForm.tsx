@@ -22,8 +22,9 @@ const useStyles = makeStyles({
 })
 
 export const LoginForm = (props: LoginFormProps) => {
-  const [loginMutation] = useMutation(login)
   const classes = useStyles()
+  const [loginMutation] = useMutation(login)
+
   return (
     <div className={classes.loginForm}>
       <Typography variant="h4">Login</Typography>
